@@ -1,0 +1,69 @@
+﻿@model FrontEnd.Models.UsuarioRegistroViewModel
+@{
+    ViewData["Title"] = "Registrar Usuario";
+}
+
+<style>
+    .brand-header { color: #0A2540; border-bottom: 3px solid #D4AF37; padding-bottom: 10px; margin-bottom: 25px; }
+    .auth-container { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 500px; margin: 40px auto; border-top: 4px solid #0A2540; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: bold; color: #333; margin-bottom: 8px; font-size: 0.9em; }
+    .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .form-control:focus { border-color: #D4AF37; outline: none; box-shadow: 0 0 5px rgba(212, 175, 55, 0.5); }
+    .btn-dorado { background-color: #D4AF37; color: #0A2540; font-weight: bold; border: none; padding: 12px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1.1em; transition: 0.3s; }
+    .btn-dorado:hover { background-color: #bfa136; }
+    .alert-error { background-color: #ffe6e6; color: #cc0000; padding: 12px; border-radius: 6px; border: 1px solid #cc0000; margin-bottom: 20px; text-align: center; }
+    .alert-success { background-color: #e6ffed; color: #006622; padding: 12px; border-radius: 6px; border: 1px solid #006622; margin-bottom: 20px; text-align: center; font-weight: bold; }
+</style>
+
+<div class="auth-container">
+    <div class="brand-header" style="text-align: center;">
+        <h2 style="margin: 0;">Crear Nuevo Usuario</h2>
+        <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9em;">Acceso Administrativo CTP Pococí</p>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+    
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert-success">@TempData["MensajeExito"]</div>
+    }
+
+    <form asp-action="Registrar" method="post">
+        
+        <div class="form-group">
+            <label asp-for="NombreUsuario"></label>
+            <input asp-for="NombreUsuario" class="form-control" autocomplete="off" />
+            <span asp-validation-for="NombreUsuario" class="text-danger" style="color: red; font-size: 0.85em;"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Rol"></label>
+            <select asp-for="Rol" class="form-control">
+                <option value="">-- Seleccione un Rol --</option>
+                <option value="Admin">Administrador (Control Total)</option>
+                <option value="User">Usuario (Solo Lectura/Operativo)</option>
+            </select>
+            <span asp-validation-for="Rol" class="text-danger" style="color: red; font-size: 0.85em;"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Contrasenna">Contraseña</label>
+            <input asp-for="Contrasenna" class="form-control" />
+            <span asp-validation-for="Contrasenna" class="text-danger" style="color: red; font-size: 0.85em;"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmarContrasenna"></label>
+            <input asp-for="ConfirmarContrasenna" class="form-control" />
+            <span asp-validation-for="ConfirmarContrasenna" class="text-danger" style="color: red; font-size: 0.85em;"></span>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn-dorado">Registrar Cuenta</button>
+        </div>
+    </form>
+</div>

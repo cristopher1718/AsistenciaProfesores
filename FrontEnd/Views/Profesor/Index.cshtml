@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Entities.DTOS.ProfesoresActivoList>
+@{
+    ViewData["Title"] = "Planilla Docente";
+   //Layout = null;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="~/css/Profesor/Profesor.css" rel="stylesheet" />
+</head>
+<section style="padding: 20px;">
+    <div class="brand-header">
+        <h2 style="margin: 0;">Planilla Docente - CTP Pococí</h2>
+        <!-- Este botón pronto nos llevará a la acción Crear -->
+        <a asp-action="Create" class="btn-dorado" style="text-decoration: none;">+ Nuevo Profesor</a>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">
+            @ViewBag.Error
+        </div>
+    }
+
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Cédula</th>
+                <th>Nombre Completo</th>
+                <th>Especialidad</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 30px;">No hay docentes activos registrados en el sistema.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var profesor in Model)
+                {
+                    <tr>
+                        <td><strong>@profesor.CodigoInstitucional</strong></td>
+                        <td>@profesor.Cedula</td>
+                        <td>@profesor.NombreCompleto</td>
+                        <td><span class="badge-especialidad">@profesor.NombreEspecialidad</span></td>
+                        <td>@profesor.Telefono</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@profesor.IdProfesor" class="btn-accion">Editar</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>

@@ -1,0 +1,150 @@
+﻿@model FrontEnd.Models.AusenciaLoteViewModel
+@{
+    ViewData["Title"] = "Control Mensual de Ausencias";
+    //Layout = null;
+}
+
+<style>
+    .brand-header {
+        color: #0A2540;
+        border-bottom: 3px solid #D4AF37;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+
+    .header-form {
+        background-color: #f8fafc;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #D4AF37;
+        margin-bottom: 25px;
+        display: inline-block;
+    }
+
+    .grid-ausencias {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95em;
+        background-color: white;
+    }
+
+        .grid-ausencias th, .grid-ausencias td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .grid-ausencias th {
+            background-color: #0A2540;
+            color: white;
+            text-align: center;
+        }
+
+    .input-numero {
+        width: 80px;
+        text-align: center;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+        .input-numero:focus {
+            border-color: #D4AF37;
+            outline: none;
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
+
+    .btn-dorado {
+        background-color: #D4AF37;
+        color: #0A2540;
+        font-weight: bold;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1.1em;
+    }
+
+    .alert-error {
+        background-color: #ffe6e6;
+        color: #cc0000;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #cc0000;
+        margin-bottom: 20px;
+    }
+
+    .alert-success {
+        background-color: #e6ffed;
+        color: #006622;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #006622;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<section style="padding: 20px;">
+    <div class="brand-header">
+        <h2 style="margin: 0;">Ingreso de Ausencias Mensuales en Lote</h2>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert-success">@TempData["MensajeExito"]</div>
+    }
+
+    <form asp-action="RegistrarAusencias" method="post">
+
+        <div class="header-form">
+            <label asp-for="FechaMes" style="font-weight: bold; display: block; margin-bottom: 8px; color: #0A2540;"></label>
+            <input asp-for="FechaMes" class="input-numero" style="width: auto;" />
+            <span asp-validation-for="FechaMes" class="text-danger" style="display:block; margin-top:5px;"></span>
+        </div>
+
+        <div style="overflow-x: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px;">
+            <table class="grid-ausencias">
+                <thead>
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Docente</th>
+                        <th>Lecciones Justificadas</th>
+                        <th>Lecciones Injustificadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Filas.Count; i++)
+                    {
+                        <tr>
+                            <!-- Ocultamos los datos llave que el usuario no edita pero el servidor necesita -->
+                            <input type="hidden" asp-for="Filas[i].IdProfesor" />
+                            <input type="hidden" asp-for="Filas[i].Cedula" />
+                            <input type="hidden" asp-for="Filas[i].NombreCompleto" />
+
+                            <!-- Mostramos los datos fijos -->
+                            <td style="font-weight: bold;">@Model.Filas[i].Cedula</td>
+                            <td>@Model.Filas[i].NombreCompleto</td>
+
+                            <!-- Cajas de texto interactivas para los números -->
+                            <td style="text-align: center;">
+                                <input asp-for="Filas[i].Justificadas" type="number" min="0" class="input-numero" />
+                            </td>
+                            <td style="text-align: center;">
+                                <input asp-for="Filas[i].Injustificadas" type="number" min="0" class="input-numero" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="btn-dorado">Guardar Reporte Mensual</button>
+    </form>
+</section>

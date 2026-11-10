@@ -1,0 +1,60 @@
+﻿@model FrontEnd.Models.AsistenciaCreateViewModel
+@{
+    ViewData["Title"] = "Control Diario de Asistencia";
+    //Layout = null;
+}
+
+<style>
+    .brand-header { color: #0A2540; border-bottom: 3px solid #D4AF37; padding-bottom: 10px; margin-bottom: 25px; }
+    .form-section { background-color: #f8fafc; padding: 25px; border-radius: 8px; border-left: 4px solid #0A2540; max-width: 600px; margin: auto; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: bold; color: #333; margin-bottom: 8px; }
+    .form-control { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1em; }
+    .btn-dorado { background-color: #D4AF37; color: #0A2540; font-weight: bold; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1.1em; transition: 0.3s; }
+    .btn-dorado:hover { background-color: #bfa136; }
+    .alert-error { background-color: #ffe6e6; color: #cc0000; padding: 15px; border-radius: 6px; border: 1px solid #cc0000; margin-bottom: 20px; text-align: center; }
+    .alert-success { background-color: #e6ffed; color: #006622; padding: 15px; border-radius: 6px; border: 1px solid #006622; margin-bottom: 20px; text-align: center; font-weight: bold; }
+</style>
+
+<section style="padding: 20px;">
+    <div class="brand-header" style="max-width: 600px; margin: 0 auto 25px auto;">
+        <h2 style="margin: 0; text-align: center;">Control Diario - Registro de Entrada</h2>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error" style="max-width: 600px; margin: 0 auto 20px auto;">@ViewBag.Error</div>
+    }
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert-success" style="max-width: 600px; margin: 0 auto 20px auto;">@TempData["MensajeExito"]</div>
+    }
+
+    <div class="form-section">
+        <form asp-action="RegistrarEntrada" method="post">
+
+            <div class="form-group">
+                <label asp-for="CodigoProfesor"></label>
+                <input asp-for="CodigoProfesor" class="form-control"></>
+                <span asp-validation-for="CodigoProfesor" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Fecha"></label>
+                <input asp-for="Fecha" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HoraEntrada"></label>
+                <input asp-for="HoraEntrada" class="form-control" />
+                <span asp-validation-for="HoraEntrada" class="text-danger"></span>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button type="submit" class="btn-dorado">Marcar Entrada</button>
+            </div>
+        </form>
+    </div>
+</section>

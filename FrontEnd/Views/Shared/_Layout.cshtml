@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CTP Pococí</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> 
+    <style>
+            /* Reseteo básico y tipografía */
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f1f5f9;
+                display: flex;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            /* Estilos del Menú Lateral (Azul Corporativo) */
+            .sidebar {
+                width: 260px;
+                background-color: #0A2540;
+                color: white;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            }
+
+            .sidebar-header {
+                padding: 20px;
+                text-align: center;
+                border-bottom: 2px solid #D4AF37;
+            }
+
+                .sidebar-header h3 {
+                    margin: 0;
+                    color: #D4AF37;
+                    font-size: 1.2em;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+
+                .sidebar-header p {
+                    margin: 5px 0 0 0;
+                    font-size: 0.85em;
+                    opacity: 0.8;
+                }
+
+            /* Enlaces de Navegación */
+            .nav-menu {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .nav-item {
+                padding: 0 15px;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 12px 15px;
+                color: #e2e8f0;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                border-left: 3px solid transparent;
+            }
+
+                .nav-link:hover, .nav-link.active {
+                    background-color: rgba(212, 175, 55, 0.1);
+                    color: #D4AF37;
+                    border-left: 3px solid #D4AF37;
+                }
+
+            /* Área de Contenido Principal */
+            .main-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            .topbar {
+                background-color: white;
+                padding: 15px 30px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .user-info {
+                font-weight: bold;
+                color: #0A2540;
+            }
+
+            /* Contenedor donde se inyectan las vistas (RenderBody) */
+            .content-body {
+                padding: 30px;
+                flex: 1;
+            }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header" style="align-items: center;; display: flex; gap:10px">
+        <div><img src="~/recursos/ctpp_logo.webp" style="width: 75px; height: 75px; float: left" /></div>
+            <div class="centered" style="float: right;">
+                <h3>CTP Pococí</h3>
+                <p>Control de Asistencia</p>
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio / Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <!-- Enlace al Módulo de Gestión de Docentes -->
+                <a class="nav-link" asp-controller="Profesor" asp-action="Index">Gestión de Docentes</a>
+            </li>
+            <li class="nav-item">
+                <!-- Enlace al Módulo de Ubicación y Aulas -->
+                <a class="nav-link" asp-controller="Ubicacion" asp-action="Index">Ubicación y Aulas</a>
+            </li>
+            <li class="nav-item">
+                <!-- Enlace al Control Diario -->
+                <a class="nav-link" asp-controller="Asistencia" asp-action="RegistrarEntrada">Control Diario</a>
+            </li>
+            <li class="nav-item">
+                <!-- Enlace al Control Mensual en Lote -->
+                <a class="nav-link" asp-controller="Asistencia" asp-action="RegistrarAusencias">Control Mensual</a>
+            </li>
+            <li class="nav-item">
+                <!-- Enlace al Módulo de Reportes -->
+                <a class="nav-link" asp-controller="Reportes" asp-action="Index">Reportes de Control</a>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Auth" asp-action="Registrar">Crear Usuario</a>
+                </li>
+            }else
+                {
+                    <li class="nav-item">
+                        <span class="nav-link">Para Crear Usuarios consulte al Administrador</span>
+                    </li> 
+                }
+            </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar" style="background-color: #0A2540; padding: 10px; border-bottom: 1px solid #1e3a6e;">
+            <div class="user-info" style="display: flex; flex-direction: row; gap: 10px;">
+                <span style="color: white;">👤 Administrador del Sistema</span>
+                <div style="border-left: 6px solid darkblue; height: 30px;"></div>
+                <a asp-controller="Auth" asp-action="Logout" style="color: white; text-decoration: underline;"> <i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+            </div>
+        </header>
+
+        <section class="content-body">
+            @RenderBody()
+        </section>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2026 - CTP Pococí - <a asp-area="" asp-controller="Home" asp-action="Privacy">Credits</a>
+            </div>
+        </footer>
+    </main>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

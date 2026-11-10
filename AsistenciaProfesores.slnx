@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="D:/Documentos/Proyectos/AsistenciaProfesores/BusinessLogicLevel/BusinessLogicLevel.csproj" />
+  <Project Path="D:/Documentos/Proyectos/AsistenciaProfesores/DataAccessLevel/DataAccessLevel.csproj" />
+  <Project Path="D:/Documentos/Proyectos/AsistenciaProfesores/Entities/Entities.csproj" />
+  <Project Path="D:/Documentos/Proyectos/AsistenciaProfesores/FrontEnd/FrontEnd.csproj" />
+</Solution>

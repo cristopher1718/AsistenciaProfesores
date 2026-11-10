@@ -1,0 +1,107 @@
+﻿@model FrontEnd.Models.ProfesorCreateViewModel
+@{
+    ViewData["Title"] = "Nuevo Docente";
+    //Layout = null;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="~/css/profesor/create.css" rel="stylesheet" />
+</head>
+
+<section style="padding: 20px; max-width: 900px; margin: auto;">
+    <div class="brand-header">
+        <h2 style="margin: 0;">Registro de Nuevo Docente</h2>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    <form asp-action="Create" method="post">
+        <!-- SECCIÓN 1: Datos Personales -->
+        <div class="form-section">
+            <h4>Datos Personales</h4>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="Cedula"></label>
+                    <input asp-for="Cedula" class="form-control" placeholder="Ej: 701230456" />
+                    <span asp-validation-for="Cedula" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Nombre"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido1"></label>
+                    <input asp-for="Apellido1" class="form-control" />
+                    <span asp-validation-for="Apellido1" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido2"></label>
+                    <input asp-for="Apellido2" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefono"></label>
+                    <input asp-for="Telefono" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: Información Institucional -->
+        <div class="form-section">
+            <h4>Información Institucional</h4>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label asp-for="CodigoInstitucional"></label>
+                    <input asp-for="CodigoInstitucional" class="form-control" placeholder="Ej: PROF-001" />
+                    <span asp-validation-for="CodigoInstitucional" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdEspecialidad"></label>
+                    <!-- El asp-items carga la lista que enviamos desde el controlador -->
+                    <select asp-for="IdEspecialidad" asp-items="Model.ListaEspecialidades" class="form-control">
+                        <option value="">-- Seleccione una Especialidad --</option>
+                    </select>
+                    <span asp-validation-for="IdEspecialidad" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: Horario de Entrada -->
+        <div class="form-section">
+            <h4>Horario de Entrada (Dejar en blanco si el día es libre)</h4>
+            <div class="grid-5">
+                <div class="form-group">
+                    <label asp-for="EntradaLunes">Lunes</label>
+                    <input asp-for="EntradaLunes" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EntradaMartes">Martes</label>
+                    <input asp-for="EntradaMartes" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EntradaMiercoles">Miércoles</label>
+                    <input asp-for="EntradaMiercoles" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EntradaJueves">Jueves</label>
+                    <input asp-for="EntradaJueves" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="EntradaViernes">Viernes</label>
+                    <input asp-for="EntradaViernes" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn-dorado">Guardar Docente</button>
+            <a asp-action="Index" class="btn-cancelar">Cancelar</a>
+        </div>
+    </form>
+</section>

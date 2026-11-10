@@ -1,0 +1,78 @@
+﻿/* Aplicación de paleta de colores corporativa (Azul y Dorado) */
+body {
+    background-color: #0A2540; /* Azul oscuro corporativo */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-color: #FFFFFF;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+    .login-container h2 {
+        color: #0A2540;
+        margin-bottom: 20px;
+    }
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+    .form-group label {
+        display: block;
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Para que el padding no desborde el ancho */
+}
+
+.btn-dorado {
+    background-color: #D4AF37; /* Dorado */
+    color: #0A2540; /* Texto azul oscuro */
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .btn-dorado:hover {
+        background-color: #bfa136;
+    }
+
+.text-danger {
+    color: red;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+.alert-error {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #cc0000;
+}

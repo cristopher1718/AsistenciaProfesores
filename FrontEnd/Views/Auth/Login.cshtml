@@ -1,0 +1,49 @@
+﻿@model FrontEnd.Models.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión - CTP Pococí</title>
+
+    <link href="~/css/login/login.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Sistema de Asistencia</h2>
+
+        <!-- Aquí mostramos el mensaje de error de tu clase Response si la contraseña es incorrecta -->
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert-error">
+                @ViewBag.Error
+            </div>
+        }
+
+        <!-- El formulario hace un POST automático a tu AuthController -->
+        <form asp-action="Login" method="post">
+            <div class="form-group">
+                <label asp-for="NombreUsuario">Usuario</label>
+                <!-- asp-for conecta este input con la propiedad de tu ViewModel -->
+                <input asp-for="NombreUsuario" class="form-control" placeholder="Ingrese su usuario" autocomplete="off" />
+                <!-- Aquí aparecerán las validaciones visuales rojas -->
+                <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Contrasenna">Contraseña</label>
+                <input asp-for="Contrasenna" class="form-control" placeholder="Ingrese su contraseña" />
+                <span asp-validation-for="Contrasenna" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-dorado">Ingresar</button>
+        </form>
+    </div>
+
+</body>
+</html>

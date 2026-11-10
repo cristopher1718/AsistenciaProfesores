@@ -1,0 +1,106 @@
+﻿@model FrontEnd.Models.ReporteViewModel
+@{
+    ViewData["Title"] = "Reportes de Asistencia";
+    //Layout = null;  
+}
+
+<style>
+    .brand-header { color: #0A2540; border-bottom: 3px solid #D4AF37; padding-bottom: 10px; margin-bottom: 25px; }
+    .filtros-section { background-color: #f8fafc; padding: 20px; border-radius: 8px; border-left: 4px solid #0A2540; margin-bottom: 25px; }
+    .grid-filtros { display: grid; grid-template-columns: 1fr 1fr 1.5fr auto; gap: 15px; align-items: end; }
+    .form-group label { display: block; font-weight: bold; color: #333; margin-bottom: 5px; font-size: 0.9em; }
+    .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .btn-dorado { background-color: #D4AF37; color: #0A2540; font-weight: bold; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; height: 42px; transition: 0.3s; }
+    .btn-dorado:hover { background-color: #bfa136; }
+    
+    .table-reporte { width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .table-reporte th, .table-reporte td { border: 1px solid #e2e8f0; padding: 12px; text-align: center; }
+    .table-reporte th { background-color: #0A2540; color: white; }
+    .col-nombre { text-align: left !important; font-weight: bold; }
+    
+    .alert-error { background-color: #ffe6e6; color: #cc0000; padding: 12px; border-radius: 6px; border: 1px solid #cc0000; margin-bottom: 20px; }
+    .alert-info { background-color: #e6f7ff; color: #005580; padding: 12px; border-radius: 6px; border: 1px solid #005580; margin-bottom: 20px; }
+</style>
+
+<section style="padding: 20px;">
+    <div class="brand-header">
+        <h2 style="margin: 0;">Módulo de Reportes de Control</h2>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">@ViewBag.Error</div>
+    }
+
+    @if (ViewBag.Info != null)
+    {
+        <div class="alert-info">@ViewBag.Info</div>
+    }
+
+    <!-- SECCIÓN DE FILTROS -->
+    <div class="filtros-section">
+        <form asp-action="Index" method="post">
+            <div class="grid-filtros">
+                <div class="form-group">
+                    <label asp-for="FechaInicio"></label>
+                    <input asp-for="FechaInicio" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaFin"></label>
+                    <input asp-for="FechaFin" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="CodigoFiltro"></label>
+                    <input asp-for="CodigoFiltro" class="form-control" placeholder="Dejar en blanco para reporte global" />
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <!-- Botón original -->
+                    <button type="submit" class="btn-dorado">Generar Reporte</button>
+                    
+                    <!-- Nuevo Botón para PDF -->
+                    <button type="submit" formaction="/Reportes/DescargarPdf" class="btn-dorado" style="background-color: #0A2540; color: white;">
+                        📄 Exportar a PDF
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- SECCIÓN DE RESULTADOS -->
+    @if (Model.Resultados != null && Model.Resultados.Any())
+    {
+        <div style="overflow-x: auto;">
+            <table class="table-reporte">
+                <thead>
+                    <tr>
+                        <th>Código Institucional</th>
+                        <th class="col-nombre">Docente</th>
+                        <th title="Llegadas tardías menores a 5 minutos">Tardías -5 min</th>
+                        <th title="Llegadas tardías mayores a 5 minutos">Tardías +5 min</th>
+                        <th>Ausencias Justificadas</th>
+                        <th>Ausencias Injustificadas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Resultados)
+                    {
+                        <tr>
+                            <td><strong>@item.CodigoInstitucional</strong></td>
+                            <td class="col-nombre">@item.NombreCompleto</td>
+                            <td>
+                                @if(item.TardiasMenores5 > 0) { <span style="color: #d97706; font-weight: bold;">@item.TardiasMenores5</span> } else { @item.TardiasMenores5 }
+                            </td>
+                            <td>
+                                @if(item.TardiasMayores5 > 0) { <span style="color: #dc2626; font-weight: bold;">@item.TardiasMayores5</span> } else { @item.TardiasMayores5 }
+                            </td>
+                            <td>@item.AusenciasJustificadas</td>
+                            <td>
+                                @if(item.AusenciasInjustificadas > 0) { <span style="color: #dc2626; font-weight: bold;">@item.AusenciasInjustificadas</span> } else { @item.AusenciasInjustificadas }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

@@ -1,0 +1,148 @@
+﻿@model IEnumerable<Entities.DTOS.UbicacionProfesorDTO>
+@{
+    ViewData["Title"] = "Ubicación de Docentes";
+    int diaActual = ViewBag.DiaSeleccionado ?? 1;
+}
+
+<style>
+    .brand-header {
+        color: #0A2540;
+        border-bottom: 3px solid #D4AF37;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+
+    /* Estilos para los botones de navegación por días */
+    .dias-nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn-dia {
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #0A2540;
+        background-color: #e2e8f0;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .btn-dia.active {
+            background-color: #D4AF37;
+            color: #0A2540;
+        }
+        /* Día seleccionado en dorado */
+        .btn-dia:hover {
+            background-color: #bfa136;
+            color: #0A2540;
+        }
+
+    /* Estilos para la cuadrícula de 12 lecciones */
+    .grid-ubicacion {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9em;
+        background-color: white;
+    }
+
+        .grid-ubicacion th, .grid-ubicacion td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 5px;
+            text-align: center;
+        }
+
+        .grid-ubicacion th {
+            background-color: #0A2540;
+            color: white;
+        }
+
+    .col-profesor {
+        text-align: left !important;
+        font-weight: bold;
+        width: 250px;
+    }
+
+    .col-aula {
+        font-weight: bold;
+        color: #0A2540;
+        white-space: nowrap;
+    }
+
+    .celda-activa {
+        background-color: #D4AF37;
+        color: #0A2540;
+        font-weight: bold;
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div style="padding: 20px;">
+    <div class="brand-header">
+        <h2 style="margin: 0;">Ubicación y Aulas</h2>
+    </div>
+
+    <!-- Menú de Navegación de Días -->
+    <div class="dias-nav">
+        <a href="@Url.Action("Index", new { diaSemana = 1 })" class="btn-dia @(diaActual == 1 ? "active" : "")">Lunes</a>
+        <a href="@Url.Action("Index", new { diaSemana = 2 })" class="btn-dia @(diaActual == 2 ? "active" : "")">Martes</a>
+        <a href="@Url.Action("Index", new { diaSemana = 3 })" class="btn-dia @(diaActual == 3 ? "active" : "")">Miércoles</a>
+        <a href="@Url.Action("Index", new { diaSemana = 4 })" class="btn-dia @(diaActual == 4 ? "active" : "")">Jueves</a>
+        <a href="@Url.Action("Index", new { diaSemana = 5 })" class="btn-dia @(diaActual == 5 ? "active" : "")">Viernes</a>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error" style="color: red; padding-bottom:15px;">@ViewBag.Error</div>
+    }
+
+    <!-- Contenedor con scroll horizontal para pantallas pequeñas o si hay muchas columnas -->
+    <div style="overflow-x: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <table class="grid-ubicacion">
+            <thead>
+                <tr>
+                    <th class="col-profesor">Profesor</th>
+                    <th>Aula</th>
+                    <!-- Generamos automáticamente las 12 columnas -->
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <th title="Lección @i">L @i</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="14" style="padding: 30px; color: #666;">No hay ubicaciones registradas para este día.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var ubicacion in Model)
+                    {
+                        <tr>
+                            <td class="col-profesor">@ubicacion.NombreProfesor</td>
+                            <td class="col-aula">@ubicacion.NumeroAula</td>
+
+                            <!-- El truco visual: Iteramos del 1 al 12 buscando coincidencias -->
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                if (ubicacion.LeccionesActivas.Contains(i))
+                                {
+                                    <td class="celda-activa">✔</td>
+                                }
+                                else
+                                {
+                                    <td></td> <!-- Celda vacía -->
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+/* Paleta corporativa CTP Pococí */
+.brand-header {
+    color: #0A2540; /* Azul oscuro */
+    border-bottom: 3px solid #D4AF37; /* Dorado */
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-custom {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+    .table-custom thead {
+        background-color: #0A2540;
+        color: #FFFFFF;
+    }
+
+    .table-custom th {
+        padding: 15px;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .table-custom tbody tr {
+        background-color: #FFFFFF;
+        transition: background-color 0.3s ease;
+    }
+
+        .table-custom tbody tr:hover {
+            background-color: #f0f4f8; /* Un azul muy claro al pasar el mouse */
+        }
+
+    .table-custom td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #eeeeee;
+        color: #333;
+        vertical-align: middle;
+    }
+
+.badge-especialidad {
+    background-color: #D4AF37;
+    color: #0A2540;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.btn-dorado {
+    background-color: #D4AF37;
+    color: #0A2540;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+    .btn-dorado:hover {
+        background-color: #bfa136;
+        color: #0A2540;
+    }
+
+.btn-accion {
+    background-color: #e2e8f0;
+    color: #0A2540;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+    .btn-accion:hover {
+        background-color: #cbd5e1;
+    }
+
+.alert-error {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #cc0000;
+    margin-bottom: 20px;
+}
