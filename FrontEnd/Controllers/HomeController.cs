@@ -1,13 +1,16 @@
-using FrontEnd.Models;
+using BusinessLogicLevel.Servicios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using static QuestPDF.Helpers.Colors;
 
 namespace FrontEnd.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController(ProfesorServicio profesorServicio, HistorialCodigoServicio historialCodigoServicio) : Controller
     {
+        private readonly ProfesorServicio _profesorServicio = profesorServicio;
+        private readonly HistorialCodigoServicio _historialCodigoServicio = historialCodigoServicio;
+
         public IActionResult Index()
         {
             return View();
@@ -17,11 +20,20 @@ namespace FrontEnd.Controllers
         {
             return View();
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> ObtenerInfoProfesor(string codigo)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var respuesta = await _profesorServicio.ObtenerProfesorInfo(codigo);
+
+            return Json(respuesta);
+            
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerHistorialCodigos()
+        {
+            var respuesta = await _historialCodigoServicio.ObtenerHistorialCodigos();
+            return Json(respuesta);
         }
     }
 }

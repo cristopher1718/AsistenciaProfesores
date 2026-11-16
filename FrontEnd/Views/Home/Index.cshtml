@@ -2,7 +2,138 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<head>
+
+    <script src="~/js/home/home.js"></script>    
+
+    <style>
+    /* Estructura principal 2x2 */
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+        grid-template-rows: 1fr 1fr; /* Dos filas iguales */
+        gap: 25px;
+        height: 75vh; /* Ocupa buena parte del espacio, pero no el 100% de la pantalla */
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Tarjetas de cada sección */
+    .dashboard-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-top: 4px solid #0A2540;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .card-header {
+        color: #0A2540;
+        border-bottom: 2px solid #D4AF37;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+        }
+
+    .search-input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+        .search-input:focus {
+            border-color: #D4AF37;
+            outline: none;
+        }
+
+    .btn-search {
+        background-color: #D4AF37;
+        color: #0A2540;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-search:hover {
+            background-color: #bfa136;
+        }
+
+    /* Resultados */
+    .result-box {
+        background-color: #f8fafc;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #0A2540;
+    }
+
+    .tag-leccion {
+        display: inline-block;
+        background-color: #0A2540;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        margin: 2px;
+    }
+
+    .alert-info {
+        color: #856404;
+        background-color: #fff3cd;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ffeeba;
+    }
+</style>
+</head>
+
+<div class="dashboard-container">
+
+    <!-- SECCIÓN 1: Búsqueda Rápida (Superior Izquierda) -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h3>🔍 Búsqueda Rápida de Docente</h3>
+        </div>
+
+        <input type="text" name="codigoBuscar" class="search-input" placeholder="Ingrese Código Institucional..." id="txtCodigoProfesor" required />
+        <button type="submit" class="btn-search" id="btnBuscarProfesorInfo">Buscar</button>
+    </div>
+
+    <!-- SECCIÓN 2: Superior Derecha (Próxima a desarrollar) -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h3>Espacio Reservado 2</h3>
+        </div>
+        <p style="color: #999;">Esta sección está lista para la siguiente funcionalidad.</p>
+    </div>
+
+    <!-- SECCIÓN 3: Inferior Izquierda (Próxima a desarrollar) -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h3>Espacio Reservado 3</h3>
+        </div>
+        <p style="color: #999;">Esta sección está lista para la siguiente funcionalidad.</p>
+    </div>
+
+    <!-- SECCIÓN 4: Inferior Derecha (Próxima a desarrollar) -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h3>Espacio Reservado 4</h3>
+        </div>
+        <p style="color: #999;">Esta sección está lista para la siguiente funcionalidad.</p>
+    </div>
+
 </div>
+
+        

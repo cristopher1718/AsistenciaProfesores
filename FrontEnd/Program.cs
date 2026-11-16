@@ -22,6 +22,7 @@ builder.Services.AddScoped<AsistenciaServicio>();
 builder.Services.AddScoped<AusenciaService>();
 builder.Services.AddScoped<ReporteServicio>();
 builder.Services.AddScoped<PdfReporteService>();
+builder.Services.AddScoped<HistorialCodigoServicio>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

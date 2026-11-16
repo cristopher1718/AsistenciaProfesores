@@ -53,7 +53,7 @@ namespace BusinessLogicLevel.Servicios
                 respuesta.Message = $"Error al obtener los profesores activos en la capa BLL: {ex.Message}";
                 respuesta.Data = null;
                 return respuesta;
-            } 
+            }
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace BusinessLogicLevel.Servicios
                 profesor.Apellido2 = dto.Apellido2;
                 profesor.Telefono = dto.Telefono;
                 profesor.IdEspecialidad = dto.IdEspecialidad;
-                profesor.Estado = dto.Estado; 
+                profesor.Estado = dto.Estado;
 
                 // 5. Actualizamos el Horario de Entrada
                 if (profesor.HorariosEntradum != null)
@@ -280,6 +280,145 @@ namespace BusinessLogicLevel.Servicios
             {
                 respuesta.Ok = false;
                 respuesta.Message = $"Ocurrió un error al actualizar en BLL: {ex.Message}";
+                return respuesta;
+            }
+        }
+
+        /// <sumary>
+        /// Retorna un profesor con todos sus datos y ubicacion de aula del dia actual
+        /// </sumary>
+        public async Task<Response<ProfesorObtenerInfoDTO>> ObtenerProfesorInfo(string codigo)
+        {
+            Response<ProfesorObtenerInfoDTO> respuesta = new();
+
+            try
+            {
+                int diaSemanaActual = (int)DateTime.Now.DayOfWeek;
+
+                if(diaSemanaActual == 0 || diaSemanaActual == 6)
+                {
+                    respuesta.Ok = false;
+                    respuesta.Message = "No se laboran sabados o domingos";
+                    respuesta.Data = null;
+
+                    return respuesta;
+                }
+
+                var profesorInfo = await _context.HistorialCodigos
+                    .Where(h => h.CodigoInstitucional == codigo && h.FechaRetiro == null)
+                    .Select(h => new ProfesorObtenerInfoDTO
+                    {
+                        IdProfesor = h.IDProfesorNavigation.IdProfesor,
+                        Estado = h.IDProfesorNavigation.Estado,
+                        CodigoInstitucional = h.CodigoInstitucional,
+                        NombreCompleto = $"{h.IDProfesorNavigation.Nombre} {h.IDProfesorNavigation.Apellido1} {h.IDProfesorNavigation.Apellido2}" ?? "No disponible",
+                        Especialidad = h.IDProfesorNavigation.IdEspecialidadNavigation != null ? h.IDProfesorNavigation.IdEspecialidadNavigation.NombreEspecialidad : "Sin Asignar",
+                        Ubicaciones = h.IDProfesorNavigation.UbicacionProfesores.Where(u => u.DiaSemana == diaSemanaActual)
+                            .Select(u => new UbicacionesHoy
+                            {
+                                Aula = u.IdAulaNavigation != null ? u.IdAulaNavigation.NumeroAula : "No disponible",
+                                LeccionesActivas = new List<int>
+                                {
+                                    u.Leccion_1 ? 1 : 0,
+                                    u.Leccion_2 ? 2 : 0,
+                                    u.Leccion_3 ? 3 : 0,
+                                    u.Leccion_4 ? 4 : 0,
+                                    u.Leccion_5 ? 5 : 0,
+                                    u.Leccion_6 ? 6 : 0,
+                                    u.Leccion_7 ? 7 : 0,
+                                    u.Leccion_8 ? 8 : 0
+                                }
+                            })
+                            .ToList(),
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (profesorInfo == null || profesorInfo.Estado != true)
+                {
+                    respuesta.Ok = false;
+                    respuesta.Message = "No se encontró un profesor activo con el código institucional proporcionado.";
+                    respuesta.Data = null;
+                    return respuesta;
+                }
+                else
+                {
+                    foreach (var ubicacion in profesorInfo.Ubicaciones)
+                    {
+                        // Filtramos las lecciones activas para eliminar los ceros
+                        ubicacion.LeccionesActivas = [.. ubicacion.LeccionesActivas.Where(l => l != 0)];
+                    }
+                    // Cambiamos numeros de dias par dias de la semana en Español
+                    switch (diaSemanaActual)
+                    {
+                        case 0:
+                            profesorInfo.DiaSemana = "Domingo";
+                            break;
+                        case 1:
+                            profesorInfo.DiaSemana = "Lunes";
+                            break;
+                        case 2:
+                            profesorInfo.DiaSemana = "Martes";
+                            break;
+                        case 3:
+                            profesorInfo.DiaSemana = "Miércoles";
+                            break;
+                        case 4:
+                            profesorInfo.DiaSemana = "Jueves";
+                            break;
+                        case 5:
+                            profesorInfo.DiaSemana = "Viernes";
+                            break;
+                        case 6:
+                            profesorInfo.DiaSemana = "Sábado";
+                            break;
+                    }
+                    respuesta.Ok = true;
+                    respuesta.Message = "Información del profesor obtenida correctamente.";
+                    respuesta.Data = profesorInfo;
+                    return respuesta;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Ok = false;
+                respuesta.Message = $"Ocurrió un error al obtener la información del profesor en BLL: {ex.Message}";
+                respuesta.Data = null;
+                return respuesta;
+            }
+        }
+
+        public async Task<Response<bool>> RehabilitarProfesor(string codigo)
+        {
+            Response<bool> respuesta = new();
+            try
+            {
+                var profesor = await _context.HistorialCodigos
+                    .Where(h => h.CodigoInstitucional == codigo && h.FechaRetiro == null)
+                    .Select(h => h.IDProfesorNavigation)
+                    .FirstOrDefaultAsync();
+
+                if (profesor == null)
+                {
+                    respuesta.Ok = false;
+                    respuesta.Message = "No se encontró un profesor con el código institucional proporcionado.";
+                    respuesta.Data = false;
+                    return respuesta;
+                }
+                profesor.Estado = true;
+
+                await _context.SaveChangesAsync();
+
+                respuesta.Ok = true;
+                respuesta.Message = "Profesor rehabilitado exitosamente.";
+                respuesta.Data = true;
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Ok = false;
+                respuesta.Message = $"Ocurrió un error al rehabilitar al profesor en BLL: {ex.Message}";
+                respuesta.Data = false;
                 return respuesta;
             }
         }
