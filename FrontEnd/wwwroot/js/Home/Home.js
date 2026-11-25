@@ -10,7 +10,9 @@
     },
 
     botones: {
-        btnBuscarProfesorInfo: '#btnBuscarProfesorInfo'
+        btnBuscarProfesorInfo: '#btnBuscarProfesorInfo',
+        btnModificarHorario: '#btnModificarHorario',
+        btnEditarProfesor: '#btnEditarProfesor'
     },
 
     variables: {
@@ -26,16 +28,49 @@
 
                 var respuesta = await profesorInfoResponse.json();
 
+                console.log({respuesta})
+
                 if (respuesta.ok && respuesta.data != null) {
 
-                    var horario = ``;
+                    let horario = ``;
+
+                    var ubicaciones = respuesta.data.ubicaciones
+
 
                     if (respuesta.data.ubicaciones.length == 0) {
                         horario = `<span>El profesor no tiene clases establecidas el dia de hoy</span>`
                     } else {
-                        horario = `<span>
-                                Aqui vamos a poner los horarios de clases del profesor
-                                </span>`
+
+                        horario = ``
+                        ubicaciones.forEach(u => {
+
+                            let aula = `<span>
+                                ${u.aula}
+                                </span>`;
+
+                            let tableRow = ``
+
+                            u.leccionesActivas.forEach(l => {
+
+                                tableRow += `<th>L${l}</th>`
+                            })
+
+                            let table = `<table style="border: 1px solid;">
+                                                <thead>
+                                                    <tr>
+                                                        ${tableRow}
+                                                    </tr>
+                                                </thead>
+                                            </table>`
+
+                            horario += `<span>
+                                ${aula}
+                                </span>
+                                ${table}
+                                `
+                        });
+
+                        
                     }
 
                     var divInfo = `
@@ -52,9 +87,7 @@
                                 <span>
                                 ${respuesta.data.diaSemana}
                                 </span>
-                                <span>
                                 ${horario}
-                                </span>
                             </div>
                               `;
 
@@ -77,8 +110,47 @@
                     text: 'Ocurrió un error al buscar la información del profesor: ' + error.message,
                 });
             }
+        },
+
+        ModifiarHorarioProfesor: async function () {
+            Swal.fire({
+                title: "Ingrese el codigo del profesor",
+                input: "text",
+                inputAttributes: { autocapitalize: "off" },
+                showCancelButton: true,
+                confirmButtonText: "Buscar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (codigo) => {
+                    try {
+                        window.location.href = `/Ubicacion/EditarHorario?codigo=${codigo}`
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            })
+        },
+
+        EditarProfesor: async function () {
+            Swal.fire({
+                title: "Ingrese el codigo del profesor",
+                input: "text",
+                inputAttributes: { autocapitalize: "off" },
+                showCancelButton: true,
+                confirmButtonText: "Buscar",
+                showLoaderOnConfirm: true,
+                preConfirm: async (codigo) => {
+                    try {
+                        window.location.href = `/Profesor/Edit/${codigo}`
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            })
         }
-        
+
+
     },
 
     eventos:
@@ -87,6 +159,13 @@
                 e.preventDefault();
                 jsDashboard.metodos.BuscarProfesorInfo();
             });
+
+            $(jsDashboard.botones.btnModificarHorario).click(function () {
+                jsDashboard.metodos.ModifiarHorarioProfesor();
+            })
+            $(jsDashboard.botones.btnEditarProfesor).click(function () {
+                jsDashboard.metodos.EditarProfesor();
+            })
         }
 }
 

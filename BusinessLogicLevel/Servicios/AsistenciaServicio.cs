@@ -31,6 +31,7 @@ namespace BusinessLogicLevel.Servicios
                 // Buscamos el horario oficial del profesor
                 var horario = await _context.HorariosEntrada
                     .FirstOrDefaultAsync(h => h.IdProfesor == profesor.IDProfesor);
+
                 if (horario == null)
                 {
                     respuesta.Ok = false;

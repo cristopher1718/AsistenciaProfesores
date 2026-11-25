@@ -2,6 +2,8 @@
 using Entities.DTOS;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
+using Entities.DBEntities;
 
 namespace BusinessLogicLevel.Servicios
 {
@@ -71,6 +73,102 @@ namespace BusinessLogicLevel.Servicios
                 respuesta.Ok = false;
                 respuesta.Message = $"Error al obtener las ubicaciones en BLL: {ex.Message}";
                 return respuesta;
+            }
+        }
+
+        public async Task<Response<bool>> ActualizarUbicacionesProfesores(ActualizarHorarioDTO dto)
+        {
+            var response = new Response<bool>();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            try
+            {
+                if(dto == null)
+                {
+                    response.Ok = false;
+                    response.Message = "Lista de lecciones vacía, imposible actualizar";
+
+                    return response;
+                }
+                /*
+                var profesorId = await _context.HistorialCodigos
+                    .Where(h => h.CodigoInstitucional == dto.Codigo && h.FechaRetiro == null)
+                    .Select(h => h.IDProfesor)
+                    .FirstOrDefaultAsync();
+                */
+                var listaUbicaciones = await _context.UbicacionProfesores
+                    .Where(u => u.IdProfesor == dto.IdProfesor)
+                    .ToListAsync();
+
+                if (listaUbicaciones.Count != 0)
+                {
+                    _context.UbicacionProfesores.RemoveRange(listaUbicaciones);
+                    await _context.SaveChangesAsync();
+                }
+
+                var nuevoHorario = new List<UbicacionProfesore>();
+
+                foreach (var horario in  dto.NuevasUbicaciones)
+                {
+                    if (horario.LeccionesActivas == null || horario.LeccionesActivas.Count == 0)
+                        continue;
+
+                    var entidad = new UbicacionProfesore // Ajusta el nombre según tu EF
+                    {
+                        IdProfesor = dto.IdProfesor,
+                        IdAula = horario.IdAula,
+                        DiaSemana = horario.DiaSemana,
+                        Leccion_1 = false,
+                        Leccion_2 = false,
+                        Leccion_3 = false,
+                        Leccion_4 = false,
+                        Leccion_5 = false,
+                        Leccion_6 = false,
+                        Leccion_7 = false,
+                        Leccion_8 = false,
+                        Leccion_9 = false,
+                        Leccion_10 = false,
+                        Leccion_11 = false,
+                        Leccion_12 = false
+                    };
+
+                    if (horario.LeccionesActivas.Contains(1)) entidad.Leccion_1 = true;
+                    if (horario.LeccionesActivas.Contains(2)) entidad.Leccion_2 = true;
+                    if (horario.LeccionesActivas.Contains(3)) entidad.Leccion_3 = true;
+                    if (horario.LeccionesActivas.Contains(4)) entidad.Leccion_4 = true;
+                    if (horario.LeccionesActivas.Contains(5)) entidad.Leccion_5 = true;
+                    if (horario.LeccionesActivas.Contains(6)) entidad.Leccion_6 = true;
+                    if (horario.LeccionesActivas.Contains(7)) entidad.Leccion_7 = true;
+                    if (horario.LeccionesActivas.Contains(8)) entidad.Leccion_8 = true;
+                    if (horario.LeccionesActivas.Contains(9)) entidad.Leccion_9 = true;
+                    if (horario.LeccionesActivas.Contains(10)) entidad.Leccion_10 = true;
+                    if (horario.LeccionesActivas.Contains(11)) entidad.Leccion_11 = true;
+                    if (horario.LeccionesActivas.Contains(12)) entidad.Leccion_12 = true;
+
+                    nuevoHorario.Add(entidad);
+                }
+
+                if(nuevoHorario.Count != 0)
+                {
+                    _context.UbicacionProfesores.AddRange(nuevoHorario);
+                    await _context.SaveChangesAsync();
+                }
+
+                await transaction.CommitAsync();
+
+                response.Ok = true;
+                response.Message = "Horario Actualizado Exitosamente";
+
+                return response;
+
+            }catch(Exception ex)
+            {
+                await transaction.RollbackAsync();
+                response.Ok = false;
+                response.Message = "Error al actualizar ubicaciones en BLL: " + ex.Message;
+
+                return response;
             }
         }
     }

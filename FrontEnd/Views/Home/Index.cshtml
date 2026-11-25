@@ -64,6 +64,8 @@
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
+        text-align: center;
+        text-decoration: none;
     }
 
         .btn-search:hover {
@@ -95,6 +97,14 @@
         border-radius: 4px;
         border: 1px solid #ffeeba;
     }
+
+    .button-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+        grid-template-rows: 1fr 1fr; /* Dos filas iguales */
+        gap: 25px;
+        padding: 20px;
+    }
 </style>
 </head>
 
@@ -110,12 +120,18 @@
         <button type="submit" class="btn-search" id="btnBuscarProfesorInfo">Buscar</button>
     </div>
 
-    <!-- SECCIÓN 2: Superior Derecha (Próxima a desarrollar) -->
+    <!-- SECCIÓN 2: Acciones Rapidas (Superior Derecha) -->
     <div class="dashboard-card">
         <div class="card-header">
-            <h3>Espacio Reservado 2</h3>
+            <h3>Acciones Rapidas</h3>
         </div>
-        <p style="color: #999;">Esta sección está lista para la siguiente funcionalidad.</p>
+        <div class="button-grid">
+            <a asp-controller="Profesor" asp-action="Create" class="btn-search">Registrar Profesor</a>
+            <button type="submit" class="btn-search" id="btnModificarHorario">Modificar Horario</button>
+            <button type="submit" class="btn-search" id="btnEditarProfesor">Editar Profesor</button>
+            <button type="submit" class="btn-search" id="btnBuscarProfesorInfo">Some Some</button>
+
+        </div>
     </div>
 
     <!-- SECCIÓN 3: Inferior Izquierda (Próxima a desarrollar) -->
@@ -136,4 +152,3 @@
 
 </div>
 
-        

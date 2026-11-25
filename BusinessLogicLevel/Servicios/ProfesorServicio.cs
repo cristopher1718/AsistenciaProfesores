@@ -295,10 +295,18 @@ namespace BusinessLogicLevel.Servicios
             {
                 int diaSemanaActual = (int)DateTime.Now.DayOfWeek;
 
-                if(diaSemanaActual == 0 || diaSemanaActual == 6)
+                if (diaSemanaActual == 0 || diaSemanaActual == 6)
                 {
                     respuesta.Ok = false;
                     respuesta.Message = "No se laboran sabados o domingos";
+                    respuesta.Data = null;
+
+                    return respuesta;
+                }
+                if (codigo == null || codigo == "")
+                {
+                    respuesta.Ok = false;
+                    respuesta.Message = "No se ha ingresado un codigo valido";
                     respuesta.Data = null;
 
                     return respuesta;

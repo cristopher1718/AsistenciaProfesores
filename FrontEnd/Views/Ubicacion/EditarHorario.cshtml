@@ -1,0 +1,126 @@
+﻿@model FrontEnd.Models.EditarHorarioViewModel
+@{
+    ViewData["Title"] = "Editar Horario";
+}
+
+<style>
+    .brand-header { color: #0A2540; border-bottom: 3px solid #D4AF37; padding-bottom: 10px; margin-bottom: 25px; }
+    .horario-container { background-color: #f8fafc; padding: 25px; border-radius: 8px; border-top: 4px solid #0A2540; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .bloque-ubicacion { background-color: white; border: 1px solid #cbd5e1; padding: 15px; border-radius: 6px; margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; position: relative; }
+    .form-control { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .lecciones-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; background-color: #f1f5f9; padding: 10px; border-radius: 4px; flex-grow: 1; }
+    .leccion-check { display: flex; align-items: center; gap: 5px; font-size: 0.9em; font-weight: bold; color: #0A2540; }
+    
+    .btn-dorado { background-color: #D4AF37; color: #0A2540; font-weight: bold; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+    .btn-dorado:hover { background-color: #bfa136; }
+    .btn-eliminar { background-color: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; font-weight: bold; }
+</style>
+
+<div style="padding: 20px;">
+    <div class="brand-header">
+        <h2 style="margin: 0;">Configuración de Horario Físico</h2>
+        <p style="margin: 5px 0 0 0; color: #666;">Docente: <strong>@Model.NombreProfesor</strong></p>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div style="background-color: #ffe6e6; color: #cc0000; padding: 15px; border-radius: 6px; margin-bottom: 20px;">@ViewBag.Error</div>
+    }
+
+    <div class="horario-container">
+        <form asp-action="EditarHorario" method="post" id="formHorario">
+            <input type="hidden" asp-for="IdProfesor" />
+
+            <div id="contenedor-bloques">
+                <!-- Los bloques de horario se generarán aquí mediante JavaScript -->
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: space-between;">
+                <button type="button" class="btn-dorado" onclick="agregarBloque()" style="background-color: #0A2540; color: white;">+ Añadir Bloque de Aula</button>
+                <button type="submit" class="btn-dorado">Guardar Horario Completo</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Plantilla oculta para clonar con JS -->
+<template id="template-bloque">
+    <div class="bloque-ubicacion">
+        <div>
+            <label style="display:block; font-weight:bold; font-size:0.85em; color:#0A2540;">Día:</label>
+            <select class="form-control select-dia" required>
+                <option value="1">Lunes</option>
+                <option value="2">Martes</option>
+                <option value="3">Miércoles</option>
+                <option value="4">Jueves</option>
+                <option value="5">Viernes</option>
+            </select>
+        </div>
+        <div>
+            <label style="display:block; font-weight:bold; font-size:0.85em; color:#0A2540;">Aula:</label>
+            <select class="form-control select-aula" required>
+                @if (Model.ListaAulas != null)
+                {
+                    foreach (var aula in Model.ListaAulas)
+                    {
+                        <option value="@aula.Value">@aula.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        
+        <div class="lecciones-grid">
+            @for (int i = 1; i <= 12; i++)
+            {
+                <label class="leccion-check">
+                    <input type="checkbox" value="@i" class="check-leccion" /> L @i
+                </label>
+            }
+        </div>
+
+        <div>
+            <button type="button" class="btn-eliminar" onclick="this.closest('.bloque-ubicacion').remove(); actualizarIndices();">X</button>
+        </div>
+    </div>
+</template>
+
+@section Scripts {
+    <script>
+        let indiceBloque = 0;
+
+        function agregarBloque() {
+            const template = document.getElementById('template-bloque');
+            const clone = template.content.cloneNode(true);
+            document.getElementById('contenedor-bloques').appendChild(clone);
+            actualizarIndices();
+        }
+
+        // Esta función es crucial: Renombra los atributos 'name' de todos los inputs 
+        // generados para que MVC entienda que forman parte de la lista 'NuevasUbicaciones'
+        function actualizarIndices() {
+            const bloques = document.querySelectorAll('#contenedor-bloques .bloque-ubicacion');
+            
+            bloques.forEach((bloque, index) => {
+                // Actualizar name del Día
+                const selectDia = bloque.querySelector('.select-dia');
+                selectDia.name = `NuevasUbicaciones[${index}].DiaSemana`;
+
+                // Actualizar name del Aula
+                const selectAula = bloque.querySelector('.select-aula');
+                selectAula.name = `NuevasUbicaciones[${index}].IdAula`;
+
+                // Actualizar names de los Checkboxes
+                const checkboxes = bloque.querySelectorAll('.check-leccion');
+                checkboxes.forEach(chk => {
+                    chk.name = `NuevasUbicaciones[${index}].LeccionesActivas`;
+                });
+            });
+            indiceBloque = bloques.length;
+        }
+
+        // Agregar el primer bloque por defecto al cargar la página
+        document.addEventListener("DOMContentLoaded", function() {
+            agregarBloque();
+        });
+    </script>
+}
